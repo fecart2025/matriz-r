@@ -1,0 +1,1069 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>Estrutura das Matrizes na Linguagem R</title>
+
+  <!-- Fontes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Highlight.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+  <style>
+    :root {
+      --color-blue-dark: #1e40af;
+      --color-blue-primary: #3b82f6;
+      --color-blue-light: #dbeafe;
+      --color-orange-accent: #f97316;
+      --color-gray-text: #6b7280;
+      --color-gray-light: #f3f4f6;
+
+      --background: #ffffff;
+      --foreground: #1f2937;
+      --border: #e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--background);
+      color: var(--foreground);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+
+    code, pre {
+      font-family: 'Fira Code', monospace;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Container */
+    .container {
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      max-width: 1280px;
+    }
+
+    @media (min-width: 640px) {
+      .container {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+    }
+
+    /* Seções */
+    .section {
+      padding: 4rem 0;
+      scroll-margin-top: 5rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: var(--foreground);
+    }
+
+    .section-subtitle {
+      font-size: 1.1rem;
+      color: var(--color-gray-text);
+      margin-bottom: 2rem;
+    }
+
+    /* Navbar */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      z-index: 50;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 4rem;
+    }
+
+    .nav-logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-blue-dark);
+    }
+
+    .nav-links {
+      display: none;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      font-size: 0.9rem;
+      color: #4b5563;
+      transition: opacity 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      opacity: 0.7;
+    }
+
+    @media (min-width: 768px) {
+      .nav-links {
+        display: flex;
+      }
+    }
+
+    /* Hero */
+    .hero {
+      padding-top: 8rem;
+      padding-bottom: 5rem;
+      background: linear-gradient(to bottom right, #ffffff, #dbeafe);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    @media (min-width: 768px) {
+      .hero-grid {
+        grid-template-columns: 1.1fr 0.9fr;
+      }
+    }
+
+    .hero-title {
+      font-size: 2.3rem;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      color: var(--color-blue-dark);
+    }
+
+    @media (min-width: 768px) {
+      .hero-title {
+        font-size: 2.8rem;
+      }
+    }
+
+    .hero-text {
+      font-size: 1.05rem;
+      color: var(--color-gray-text);
+      margin-bottom: 2rem;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background-color: var(--color-blue-dark);
+      color: #ffffff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .btn-outline {
+      border: 2px solid var(--color-blue-dark);
+      color: var(--color-blue-dark);
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      background: transparent;
+      cursor: pointer;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .hero-image {
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      .hero-image {
+        display: block;
+      }
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: auto;
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    /* Cards e grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    @media (min-width: 768px) {
+      .grid-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 2rem;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
+      color: var(--color-blue-dark);
+    }
+
+    .card-text {
+      font-size: 0.95rem;
+      color: var(--color-gray-text);
+      line-height: 1.5;
+    }
+
+    .border-left-accent {
+      border-left: 4px solid var(--color-blue-dark);
+      padding-left: 1.5rem;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      border-radius: 0.25rem;
+      background: #ffffff;
+    }
+
+    .code-hint {
+      background: #f3f4f6;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--color-blue-dark);
+    }
+
+    /* Code block */
+    .code-block {
+      background: #f3f4f6;
+      color: var(--foreground);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+      line-height: 1.5;
+      position: relative;
+    }
+
+    .copy-button {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background-color: var(--color-blue-dark);
+      color: #ffffff;
+      border-radius: 999px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.7rem;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .copy-button:hover {
+      background-color: var(--color-blue-primary);
+    }
+
+    .copy-button.copied {
+      background-color: #16a34a;
+    }
+
+    /* Lista de exemplos */
+    .examples-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .examples-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .example-card-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid #e5e7eb;
+      background: #f9fafb;
+    }
+
+    .example-card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--color-blue-dark);
+    }
+
+    .example-card-desc {
+      font-size: 0.9rem;
+      color: var(--color-gray-text);
+    }
+
+    .example-card-body {
+      padding: 1.5rem;
+    }
+
+    /* Aplicação real */
+    .badge-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: var(--color-orange-accent);
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .benefits-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--color-blue-dark);
+      color: #dbeafe;
+      padding: 3rem 0;
+      margin-top: 2rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .footer-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .footer-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #ffffff;
+    }
+
+    .footer-link {
+      font-size: 0.85rem;
+      color: #dbeafe;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #1e3a8a;
+      padding-top: 1.5rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #dbeafe;
+    }
+
+    .footer-bottom p {
+      margin: 0.25rem 0;
+    }
+
+    /* Highlight.js override */
+    .hljs {
+      background: transparent !important;
+      padding: 0 !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navegação -->
+  <nav>
+    <div class="container nav-inner">
+      <div class="nav-logo">R Matrices</div>
+      <div class="nav-links">
+        <a href="#historico">Histórico</a>
+        <a href="#funcionalidades">Funcionalidades</a>
+        <a href="#exemplos">Exemplos</a>
+        <a href="#aplicacao">Aplicação Real</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <h1 class="hero-title">
+          Estrutura das Matrizes na Linguagem R
+        </h1>
+        <p class="hero-text">
+          Aprenda de forma clara e didática como trabalhar com matrizes em R, desde conceitos fundamentais até aplicações práticas em problemas reais.
+        </p>
+        <div class="hero-buttons">
+          <a href="#funcionalidades" class="btn-primary">Começar Agora</a>
+          <a href="#historico" class="btn-outline">Histórico</a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img 
+          src="https://d2xsxph8kpxj0f.cloudfront.net/310519663198562819/eEwQgdBrmemJyuafLB4pEB/hero-matrices-boaz4rYCF8osMBv4JwVzPn.webp"
+          alt="Visualização de Matrizes" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Histórico -->
+  <section id="historico" class="section" style="background-color:#ffffff;">
+    <div class="container">
+      <h2 class="section-title" style="text-align:center;color:#1e40af;">Histórico das Matrizes</h2>
+      <p class="section-subtitle" style="text-align:center;max-width:48rem;margin:0 auto 2rem;">
+        Conheça a fascinante jornada do desenvolvimento das matrizes na matemática
+      </p>
+
+      <div class="grid-2" style="align-items:center;margin-bottom:3rem;">
+        <div>
+          <img 
+            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663198562819/eEwQgdBrmemJyuafLB4pEB/history-section-FiA7LCuDyncdhiuooofT7z.webp"
+            alt="Desenvolvimento das Matrizes"
+            style="width:100%;height:auto;border-radius:0.75rem;box-shadow:0 10px 30px rgba(0,0,0,0.15);" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          <div class="border-left-accent">
+            <h3 style="font-size:1.1rem;margin-bottom:0.35rem;color:#1e40af;">Século XVIII - Origens</h3>
+            <p class="card-text">
+              O conceito de matrizes surgiu do estudo de sistemas de equações lineares. Matemáticos como Leibniz e Cramer desenvolveram métodos para resolver estes sistemas.
+            </p>
+          </div>
+
+          <div class="border-left-accent">
+            <h3 style="font-size:1.1rem;margin-bottom:0.35rem;color:#1e40af;">1855 - Arthur Cayley</h3>
+            <p class="card-text">
+              Arthur Cayley publicou trabalhos fundamentais sobre a teoria das matrizes, estabelecendo as operações básicas e propriedades algébricas que usamos até hoje.
+            </p>
+          </div>
+
+          <div class="border-left-accent">
+            <h3 style="font-size:1.1rem;margin-bottom:0.35rem;color:#1e40af;">1850s-1860s - James Joseph Sylvester</h3>
+            <p class="card-text">
+              Sylvester contribuiu significativamente com a notação de matrizes e o desenvolvimento de invariantes matriciais, consolidando a teoria moderna.
+            </p>
+          </div>
+
+          <div class="border-left-accent">
+            <h3 style="font-size:1.1rem;margin-bottom:0.35rem;color:#1e40af;">Importância Contemporânea</h3>
+            <p class="card-text">
+              Matrizes são fundamentais em matemática, estatística, física, engenharia, computação gráfica, machine learning e praticamente todas as ciências aplicadas.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Matrizes em R -->
+  <section id="funcionalidades" class="section" style="background-color:#f9fafb;">
+    <div class="container">
+      <h2 class="section-title" style="text-align:center;color:#1e40af;">Matrizes na Linguagem R</h2>
+      <p class="section-subtitle" style="text-align:center;max-width:48rem;margin:0 auto 2rem;">
+        Compreenda a estrutura e funcionalidade das matrizes em R
+      </p>
+
+      <div class="grid-2" style="margin-bottom:3rem;">
+        <div style="display:flex;flex-direction:column;gap:1.5rem;">
+          <div class="card">
+            <h3 class="card-title">O que é uma Matriz em R?</h3>
+            <p class="card-text">
+              Uma matriz em R é uma estrutura de dados bidimensional (linhas e colunas) que armazena elementos do mesmo tipo.
+              Diferente de um data frame, todos os elementos devem ser do mesmo tipo de dado (numérico, caractere, lógico, etc.).
+            </p>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">Estrutura Bidimensional</h3>
+            <p class="card-text" style="margin-bottom:0.75rem;">
+              Uma matriz é organizada em linhas (horizontais) e colunas (verticais). Cada elemento é identificado por sua posição [linha, coluna].
+            </p>
+            <div class="code-hint">
+              Matriz[i, j] onde i = linha, j = coluna
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">Função matrix()</h3>
+            <p class="card-text" style="margin-bottom:0.75rem;">
+              A função principal para criar matrizes em R é <code style="background:#f3f4f6;padding:0.2rem 0.4rem;border-radius:0.25rem;font-size:0.85rem;">matrix()</code>
+            </p>
+            <div style="font-size:0.9rem;color:#4b5563;">
+              <p><strong>Argumentos principais:</strong></p>
+              <ul style="padding-left:1rem;margin:0.5rem 0 0 0;list-style:disc;">
+                <li><code style="background:#f3f4f6;padding:0.1rem 0.3rem;border-radius:0.25rem;">data</code> - vetor com os elementos</li>
+                <li><code style="background:#f3f4f6;padding:0.1rem 0.3rem;border-radius:0.25rem;">nrow</code> - número de linhas</li>
+                <li><code style="background:#f3f4f6;padding:0.1rem 0.3rem;border-radius:0.25rem;">ncol</code> - número de colunas</li>
+                <li><code style="background:#f3f4f6;padding:0.1rem 0.3rem;border-radius:0.25rem;">byrow</code> - TRUE para preencher por linha</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:1.5rem;">
+          <div class="card">
+            <h3 class="card-title">Exemplo Básico</h3>
+            <div class="code-block">
+              <button class="copy-button" data-target="code-ex-basic">Copiar</button>
+              <pre><code id="code-ex-basic" class="language-r">A &lt;- matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2)
+A
+
+#      [,1] [,2]
+# [1,]    1    3
+# [2,]    2    4</code></pre>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">Operações Principais</h3>
+            <div style="display:flex;flex-direction:column;gap:0.75rem;font-size:0.9rem;">
+              <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+                <span style="font-weight:700;color:#f97316;">+</span>
+                <div>
+                  <p style="margin:0;font-weight:600;color:#111827;">Soma: A + B</p>
+                  <p style="margin:0.25rem 0 0;font-size:0.85rem;color:#6b7280;">Soma elemento a elemento</p>
+                </div>
+              </div>
+              <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+                <span style="font-weight:700;color:#f97316;">×</span>
+                <div>
+                  <p style="margin:0;font-weight:600;color:#111827;">Multiplicação: A %*% B</p>
+                  <p style="margin:0.25rem 0 0;font-size:0.85rem;color:#6b7280;">Multiplicação matricial</p>
+                </div>
+              </div>
+              <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+                <span style="font-weight:700;color:#f97316;">T</span>
+                <div>
+                  <p style="margin:0;font-weight:600;color:#111827;">Transposta: t(A)</p>
+                  <p style="margin:0.25rem 0 0;font-size:0.85rem;color:#6b7280;">Troca linhas por colunas</p>
+                </div>
+              </div>
+              <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+                <span style="font-weight:700;color:#f97316;">|</span>
+                <div>
+                  <p style="margin:0;font-weight:600;color:#111827;">Determinante: det(A)</p>
+                  <p style="margin:0.25rem 0 0;font-size:0.85rem;color:#6b7280;">Valor escalar da matriz</p>
+                </div>
+              </div>
+              <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+                <span style="font-weight:700;color:#f97316;">⁻¹</span>
+                <div>
+                  <p style="margin:0;font-weight:600;color:#111827;">Inversa: solve(A)</p>
+                  <p style="margin:0.25rem 0 0;font-size:0.85rem;color:#6b7280;">Matriz inversa (se existir)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="border-left:4px solid #1e40af;padding:1.25rem;border-radius:0.5rem;background:#dbeafe;font-size:0.9rem;color:#374151;">
+            <p style="margin:0;">
+              <strong>Dica:</strong> Use <code style="background:#ffffff;padding:0.2rem 0.4rem;border-radius:0.25rem;font-size:0.75rem;">dim(A)</code> para verificar as dimensões,
+              <code style="background:#ffffff;padding:0.2rem 0.4rem;border-radius:0.25rem;font-size:0.75rem;">nrow(A)</code> para linhas e
+              <code style="background:#ffffff;padding:0.2rem 0.4rem;border-radius:0.25rem;font-size:0.75rem;">ncol(A)</code> para colunas.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exemplo completo -->
+      <div class="card" style="border-width:2px;border-color:#1e40af;">
+        <h3 class="card-title" style="font-size:1.4rem;margin-bottom:1.5rem;">Exemplo Completo</h3>
+        <div class="code-block">
+          <button class="copy-button" data-target="code-ex-completo">Copiar</button>
+          <pre><code id="code-ex-completo" class="language-r"># Criar duas matrizes
+A &lt;- matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2)
+B &lt;- matrix(c(5, 6, 7, 8), nrow = 2, ncol = 2)
+
+# Operações
+soma &lt;- A + B           # Soma elemento a elemento
+mult &lt;- A %*% B         # Multiplicação matricial
+transp &lt;- t(A)          # Transposta
+det_A &lt;- det(A)         # Determinante
+inv_A &lt;- solve(A)       # Inversa
+
+# Visualizar resultados
+print("Soma:")
+print(soma)
+print("Multiplicação Matricial:")
+print(mult)</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Exemplos práticos -->
+  <section id="exemplos" class="section" style="background-color:#ffffff;">
+    <div class="container">
+      <h2 class="section-title" style="text-align:center;color:#1e40af;">Exemplos Práticos em R</h2>
+      <p class="section-subtitle" style="text-align:center;max-width:48rem;margin:0 auto 2rem;">
+        Explore diversos exemplos de criação, manipulação e operações com matrizes
+      </p>
+
+      <div class="examples-grid">
+        <!-- ex1 -->
+        <div class="card">
+          <div class="example-card-header">
+            <h3 class="example-card-title">Criação Básica de Matriz</h3>
+            <p class="example-card-desc">
+              Criar uma matriz simples com 2 linhas e 2 colunas usando a função matrix()
+            </p>
+          </div>
+          <div class="example-card-body">
+            <div class="code-block">
+              <button class="copy-button" data-target="ex1">Copiar</button>
+              <pre><code id="ex1" class="language-r"># Criar uma matriz 2x2
+A &lt;- matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2)
+A
+
+# Resultado:
+#      [,1] [,2]
+# [1,]    1    3
+# [2,]    2    4</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- ex2 -->
+        <div class="card">
+          <div class="example-card-header">
+            <h3 class="example-card-title">Preenchimento por Linha</h3>
+            <p class="example-card-desc">
+              Usar o argumento byrow = TRUE para preencher a matriz por linha em vez de coluna
+            </p>
+          </div>
+          <div class="example-card-body">
+            <div class="code-block">
+              <button class="copy-button" data-target="ex2">Copiar</button>
+              <pre><code id="ex2" class="language-r"># Preencher por linha
+B &lt;- matrix(c(1, 2, 3, 4, 5, 6), nrow = 2, ncol = 3, byrow = TRUE)
+B
+
+# Resultado:
+#      [,1] [,2] [,3]
+# [1,]    1    2    3
+# [2,]    4    5    6</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- ex3 -->
+        <div class="card">
+          <div class="example-card-header">
+            <h3 class="example-card-title">Acesso a Elementos</h3>
+            <p class="example-card-desc">
+              Acessar elementos específicos de uma matriz usando índices [linha, coluna]
+            </p>
+          </div>
+          <div class="example-card-body">
+            <div class="code-block">
+              <button class="copy-button" data-target="ex3">Copiar</button>
+              <pre><code id="ex3" class="language-r"># Acessar elemento na linha 1, coluna 2
+A[1, 2]  # Retorna: 3
+
+# Acessar toda a primeira linha
+A[1, ]   # Retorna: 1 3
+
+# Acessar toda a segunda coluna
+A[, 2]   # Retorna: 3 4</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- ex4 -->
+        <div class="card">
+          <div class="example-card-header">
+            <h3 class="example-card-title">Soma de Matrizes</h3>
+            <p class="example-card-desc">
+              Somar duas matrizes de mesma dimensão elemento a elemento
+            </p>
+          </div>
+          <div class="example-card-body">
+            <div class="code-block">
+              <button class="copy-button" data-target="ex4">Copiar</button>
+              <pre><code id="ex4" class="language-r">A &lt;- matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2)
+B &lt;- matrix(c(5, 6, 7, 8), nrow = 2, ncol = 2)
+
+# Soma
+C &lt;- A + B
+C
+
+# Resultado:
+#      [,1] [,2]
+# [1,]    6   10
+# [2,]    8   12</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- ex5 -->
+        <div class="card">
+          <div class="example-card-header">
+            <h3 class="example-card-title">Multiplicação Matricial</h3>
+            <p class="example-card-desc">
+              Multiplicar duas matrizes usando o operador %*%
+            </p>
+          </div>
+          <div class="example-card-body">
+            <div class="code-block">
+              <button class="copy-button" data-target="ex5">Copiar</button>
+              <pre><code id="ex5" class="language-r">A &lt;- matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2)
+B &lt;- matrix(c(5, 6, 7, 8), nrow = 2, ncol = 2)
+
+# Multiplicação matricial
+C &lt;- A %*% B
+C
+
+# Resultado:
+#      [,1] [,2]
+# [1,]   19   22
+# [2,]   43   50</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- ex6 -->
+        <div class="card">
+          <div class="example-card-header">
+            <h3 class="example-card-title">Transposta de Matriz</h3>
+            <p class="example-card-desc">
+              Transpor uma matriz (trocar linhas por colunas) usando t()
+            </p>
+          </div>
+          <div class="example-card-body">
+            <div class="code-block">
+              <button class="copy-button" data-target="ex6">Copiar</button>
+              <pre><code id="ex6" class="language-r">A &lt;- matrix(c(1, 2, 3, 4, 5, 6), nrow = 2, ncol = 3)
+A
+
+# Transposta
+At &lt;- t(A)
+At
+
+# Resultado:
+#      [,1] [,2]
+# [1,]    1    4
+# [2]    2    5
+# [3,]    3    6</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- ex7 -->
+        <div class="card">
+          <div class="example-card-header">
+            <h3 class="example-card-title">Determinante de Matriz</h3>
+            <p class="example-card-desc">
+              Calcular o determinante de uma matriz quadrada usando det()
+            </p>
+          </div>
+          <div class="example-card-body">
+            <div class="code-block">
+              <button class="copy-button" data-target="ex7">Copiar</button>
+              <pre><code id="ex7" class="language-r">A &lt;- matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2)
+
+# Determinante
+d &lt;- det(A)
+d
+
+# Resultado: -2
+# Cálculo: (1 × 4) - (2 × 3) = 4 - 6 = -2</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- ex8 -->
+        <div class="card">
+          <div class="example-card-header">
+            <h3 class="example-card-title">Inversa de Matriz</h3>
+            <p class="example-card-desc">
+              Calcular a inversa de uma matriz quadrada invertível usando solve()
+            </p>
+          </div>
+          <div class="example-card-body">
+            <div class="code-block">
+              <button class="copy-button" data-target="ex8">Copiar</button>
+              <pre><code id="ex8" class="language-r">A &lt;- matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2)
+
+# Inversa
+Ainv &lt;- solve(A)
+Ainv
+
+# Verificação: A %*% Ainv = I (matriz identidade)
+A %*% Ainv</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Aplicação real -->
+  <section id="aplicacao" class="section" style="background-color:#dbeafe;">
+    <div class="container">
+      <h2 class="section-title" style="text-align:center;color:#1e40af;">Aplicação Real: Cálculo de Faturamento</h2>
+      <p class="section-subtitle" style="text-align:center;max-width:48rem;margin:0 auto 2rem;">
+        Veja como matrizes resolvem problemas práticos em negócios
+      </p>
+
+      <div class="grid-2" style="align-items:flex-start;margin-bottom:3rem;">
+        <div style="display:flex;flex-direction:column;gap:1.5rem;">
+          <div class="card">
+            <h3 class="card-title">Cenário</h3>
+            <p class="card-text" style="margin-bottom:1rem;">
+              Uma empresa vende 3 produtos diferentes em 2 meses. Queremos calcular o faturamento total de cada produto usando multiplicação matricial.
+            </p>
+            <div style="background:#f9fafb;padding:1rem;border-radius:0.5rem;font-size:0.9rem;">
+              <p style="margin:0 0 0.5rem;"><strong>Dados:</strong></p>
+              <ul style="margin:0;padding-left:1rem;list-style:disc;color:#4b5563;">
+                <li>Produto 1: 100 unidades (mês 1), 150 unidades (mês 2)</li>
+                <li>Produto 2: 80 unidades (mês 1), 120 unidades (mês 2)</li>
+                <li>Produto 3: 50 unidades (mês 1), 90 unidades (mês 2)</li>
+                <li>Preços: R$ 10, R$ 15, R$ 20</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">Solução Passo a Passo</h3>
+            <div style="display:flex;flex-direction:column;gap:0.75rem;font-size:0.9rem;">
+              <div>
+                <p style="margin:0;font-weight:600;color:#111827;">1. Criar matriz de quantidades (3×2)</p>
+                <p style="margin:0.25rem 0 0;color:#6b7280;">Cada linha = um produto, cada coluna = um mês</p>
+              </div>
+              <div>
+                <p style="margin:0;font-weight:600;color:#111827;">2. Criar matriz de preços (1×3)</p>
+                <p style="margin:0.25rem 0 0;color:#6b7280;">Uma linha com os preços dos 3 produtos</p>
+              </div>
+              <div>
+                <p style="margin:0;font-weight:600;color:#111827;">3. Multiplicação matricial</p>
+                <p style="margin:0.25rem 0 0;color:#6b7280;">preços %*% quantidade = faturamento por mês</p>
+              </div>
+              <div>
+                <p style="margin:0;font-weight:600;color:#111827;">4. Interpretar resultados</p>
+                <p style="margin:0.25rem 0 0;color:#6b7280;">Cada coluna mostra o faturamento total do mês</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="border-width:2px;border-color:#1e40af;">
+          <h3 class="card-title">Código R Completo</h3>
+          <div class="code-block" style="margin-top:1.5rem;">
+            <button class="copy-button" data-target="ex-aplicacao">Copiar</button>
+            <pre><code id="ex-aplicacao" class="language-r"># Matriz de quantidades (3 produtos × 2 meses)
+quantidade &lt;- matrix(
+  c(100, 150,
+    80,  120,
+    50,  90),
+  nrow = 3,
+  byrow = TRUE
+)
+
+# Matriz de preços (1 × 3)
+precos &lt;- matrix(c(10, 15, 20), nrow = 1)
+
+# Multiplicação matricial
+# Resultado: 1×2 (faturamento por mês)
+faturamento &lt;- precos %*% quantidade
+
+# Visualizar resultado
+print("Faturamento por mês:")
+print(faturamento)
+
+# Resultado esperado:
+# [,1]  [,2]
+# 3850  5850
+
+# Interpretação:
+# Mês 1: R$ 3.850
+# Mês 2: R$ 5.850</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">Por que Usar Matrizes?</h3>
+        <div class="benefits-grid" style="margin-top:1.5rem;">
+          <div style="text-align:center;">
+            <div class="badge-icon">⚡</div>
+            <h4 style="margin:0 0 0.5rem;font-weight:600;color:#111827;">Eficiência</h4>
+            <p style="margin:0;font-size:0.9rem;color:#6b7280;">Operações vetorizadas são muito mais rápidas que loops</p>
+          </div>
+          <div style="text-align:center;">
+            <div class="badge-icon">📊</div>
+            <h4 style="margin:0 0 0.5rem;font-weight:600;color:#111827;">Clareza</h4>
+            <p style="margin:0;font-size:0.9rem;color:#6b7280;">Código mais legível e fácil de manter</p>
+          </div>
+          <div style="text-align:center;">
+            <div class="badge-icon">🎯</div>
+            <h4 style="margin:0 0 0.5rem;font-weight:600;color:#111827;">Escalabilidade</h4>
+            <p style="margin:0;font-size:0.9rem;color:#6b7280;">Funciona igualmente bem com dados pequenos ou grandes</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Conclusão -->
+  <section class="section" style="background-color:#ffffff;">
+    <div class="container" style="max-width:48rem;">
+      <div style="text-align:center;">
+        <h2 class="section-title" style="color:#1e40af;">Conclusão</h2>
+        <p style="font-size:1.05rem;color:#6b7280;line-height:1.6;margin-bottom:1.5rem;">
+          As matrizes são uma ferramenta fundamental na linguagem R, permitindo operações matemáticas eficientes e elegantes.
+          Desde cálculos simples até análises complexas, o domínio de matrizes é essencial para qualquer profissional que trabalhe com dados e estatística.
+        </p>
+        <p style="font-size:1.05rem;color:#6b7280;line-height:1.6;margin-bottom:1.5rem;">
+          Pratique os exemplos apresentados, explore as operações e aplique esses conhecimentos em seus próprios projetos.
+          Com o tempo, trabalhar com matrizes em R se tornará uma segunda natureza.
+        </p>
+        <div style="border-left:4px solid #1e40af;padding:1.25rem;border-radius:0.5rem;background:#dbeafe;text-align:left;font-size:0.95rem;color:#374151;">
+          <p style="margin:0;">
+            <strong>Próximos passos:</strong> Explore funções avançadas como
+            <code style="background:#ffffff;padding:0.2rem 0.4rem;border-radius:0.25rem;font-size:0.75rem;">eigen()</code> para autovalores,
+            <code style="background:#ffffff;padding:0.2rem 0.4rem;border-radius:0.25rem;font-size:0.75rem;">svd()</code> para decomposição em valores singulares,
+            e <code style="background:#ffffff;padding:0.2rem 0.4rem;border-radius:0.25rem;font-size:0.75rem;">apply()</code> para operações por linha ou coluna.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4 class="footer-title">Sobre</h4>
+          <p style="font-size:0.9rem;color:#dbeafe;margin:0;">
+            Site educacional dedicado ao ensino de matrizes na linguagem R, com foco em clareza e aplicações práticas.
+          </p>
+        </div>
+        <div>
+          <h4 class="footer-title">Seções</h4>
+          <a href="#historico" class="footer-link">Histórico</a>
+          <a href="#funcionalidades" class="footer-link">Funcionalidades</a>
+          <a href="#exemplos" class="footer-link">Exemplos</a>
+          <a href="#aplicacao" class="footer-link">Aplicação Real</a>
+        </div>
+        <div>
+          <h4 class="footer-title">Recursos</h4>
+          <a href="https://www.r-project.org/" class="footer-link">R Project</a>
+          <a href="https://www.rstudio.com/" class="footer-link">RStudio</a>
+          <a href="https://cran.r-project.org/" class="footer-link">CRAN</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>Projeto acadêmico sobre Matrizes em R • <span id="year"></span></p>
+        <p>Desenvolvido com foco em educação e clareza</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Highlight.js
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.hljs) {
+        document.querySelectorAll('pre code').forEach(function (el) {
+          window.hljs.highlightElement(el);
+        });
+      }
+
+      // Botões de cópia
+      document.querySelectorAll('.copy-button').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var targetId = btn.getAttribute('data-target');
+          var codeEl = document.getElementById(targetId);
+          if (!codeEl) return;
+
+          var text = codeEl.innerText;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function () {
+              btn.classList.add('copied');
+              btn.textContent = 'Copiado!';
+              setTimeout(function () {
+                btn.classList.remove('copied');
+                btn.textContent = 'Copiar';
+              }, 2000);
+            });
+          } else {
+            // Fallback simples
+            var textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+              document.execCommand('copy');
+            } catch (e) {}
+            document.body.removeChild(textarea);
+            btn.classList.add('copied');
+            btn.textContent = 'Copiado!';
+            setTimeout(function () {
+              btn.classList.remove('copied');
+              btn.textContent = 'Copiar';
+            }, 2000);
+          }
+        });
+      });
+
+      // Ano no rodapé
+      var yearSpan = document.getElementById('year');
+      if (yearSpan) {
+        yearSpan.textContent = new Date().getFullYear();
+      }
+    });
+  </script>
+</body>
+</html>
+
